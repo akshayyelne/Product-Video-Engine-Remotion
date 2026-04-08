@@ -1,0 +1,27 @@
+{
+  "name": "product-video-engine-remotion",
+  "version": "1.0.0",
+  "description": "Remotion blueprint for AI product videos using the AlayaFlow pattern.",
+  "scripts": {
+    "start": "remotion studio src/Root.tsx",
+    "build": "remotion bundle src/Root.tsx --public-dir=public",
+    "render": "remotion render src/Root.tsx ProductFeatures out/ProductFeatures.mp4",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.301",
+    "@remotion/google-fonts": "4.0.301",
+    "@remotion/renderer": "^4.0.446",
+    "@remotion/tailwind": "4.0.301",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.301"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.7.0"
+  }
+}
