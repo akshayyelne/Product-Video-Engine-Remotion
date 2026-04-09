@@ -1,6 +1,6 @@
 # Product Video Engine — Remotion
 
-A Remotion blueprint for AI product videos built around the AlayaFlow pattern.
+A Remotion blueprint for AI product videos
 
 This project uses React, Tailwind, and Remotion to generate a polished set of product video compositions, including discovery, definition, vision, architecture, brand reveal, and a master demo sequence.
 
