@@ -68,34 +68,61 @@ export const TOTAL_FRAMES = Object.values(STAGE_DURATIONS).reduce(
 /* ── Audio configuration ────────────────────────────────────────────────── */
 
 /**
- * Set to false for a silent render (useful while the narration MP3
- * is not yet available in the /public folder).
+ * ambient-calm.mp3 loops at low volume for the full 85s.
+ * soulora-commentary-full.mp3 plays once from frame 0.
+ *
+ * Both files are already in /public so no flag is needed.
+ *
+ * ElevenLabs master narration — enable once the file is ready:
+ *   Set MASTER_NARRATION_ENABLED = true and drop the MP3 at
+ *   public/soulora-master-narration.mp3
  */
-const MASTER_AUDIO_ENABLED = false; // flip to true once public/soulora-master-narration.mp3 is added
+const MASTER_NARRATION_ENABLED = false;
 
 /**
- * ElevenLabs master narration file — must be placed at:
- *   public/soulora-master-narration.mp3
- *
- * The file should be exactly 85 seconds long, or Remotion will
- * trim / loop it according to the Audio element's behaviour.
- * Set loop={false} (default) so it plays once.
+ * souloraConfig stripped of bgTrack + voiceoverTrack so ProductFeatures
+ * (Stage 4) does not double-play them while MasterDemo controls the global
+ * audio. The orbSfx shimmer stays — it's a one-shot SFX at the Orb reveal.
  */
-const MASTER_NARRATION_FILE = "soulora-master-narration.mp3";
+const souloraConfigForMaster = {
+  ...souloraConfig,
+  audio: {
+    ...souloraConfig.audio!,
+    bgTrack:        "",   // silenced — ambient plays at master level
+    voiceoverTrack: undefined, // silenced — commentary plays at master level
+  },
+};
 
 /* ── Component ──────────────────────────────────────────────────────────── */
 
 const MasterDemo: React.FC = () => {
   return (
     <>
-      {/* ── Master ElevenLabs narration track ─────────────────────────
-       *  Starts at frame 0 and runs for the full composition duration.
-       *  Volume can be lowered here if a background music track is
-       *  added separately.
+      {/* ── 1. Ambient background music — loops for full 85s ──────────
+       *  Looped so it covers any length without a gap or cut-off.
+       *  Volume kept low (0.28) so it sits under the commentary.
        * ──────────────────────────────────────────────────────────── */}
-      {MASTER_AUDIO_ENABLED && (
+      <Audio
+        src={staticFile("ambient-calm.mp3")}
+        volume={0.28}
+        loop
+        startFrom={0}
+      />
+
+      {/* ── 2. Full commentary — plays once from frame 0 ──────────────
+       *  soulora-commentary-full.mp3 covers the narrative arc for the
+       *  entire demo. Sits on top of the ambient bed.
+       * ──────────────────────────────────────────────────────────── */}
+      <Audio
+        src={staticFile("soulora-commentary-full.mp3")}
+        volume={0.9}
+        startFrom={0}
+      />
+
+      {/* ── 3. ElevenLabs master narration (optional — enable when ready) */}
+      {MASTER_NARRATION_ENABLED && (
         <Audio
-          src={staticFile(MASTER_NARRATION_FILE)}
+          src={staticFile("soulora-master-narration.mp3")}
           volume={1}
           startFrom={0}
         />
@@ -133,7 +160,7 @@ const MasterDemo: React.FC = () => {
           durationInFrames={STAGE_DURATIONS.capabilities}
           name="Stage 4 · Capabilities"
         >
-          <ProductFeatures config={souloraConfig} />
+          <ProductFeatures config={souloraConfigForMaster} />
         </Series.Sequence>
 
         {/* ── Stage 5: Architecture (55s – 70s / frames 1650–2099) ─── */}
